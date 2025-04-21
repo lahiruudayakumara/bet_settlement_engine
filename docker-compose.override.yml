@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  bet-settlement-engine:
+    volumes:
+      - .:/app
+    command: ["go", "run", "./cmd/server/main.go"]
