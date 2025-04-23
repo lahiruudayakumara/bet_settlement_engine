@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: Bet Settlement Engine API
+  description: REST API for placing and settling bets using in-memory storage.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8081
+    description: Local development server
+
+paths:
+  /bets:
+    post:
+      summary: Place a new bet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceBetRequest'
+      responses:
+        '201':
+          description: Bet placed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bet'
+        '400':
+          description: Invalid request
+
+  /bets/settle:
+    post:
+      summary: Settle all bets for a given event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettleBetRequest'
+      responses:
+        '200':
+          description: Bets settled successfully
+        '404':
+          description: Event not found
+
+  /users/{userId}/balance:
+    get:
+      summary: Get the current balance of a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Balance retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBalance'
+        '404':
+          description: User not found
+
+components:
+  schemas:
+    PlaceBetRequest:
+      type: object
+      required:
+        - user_id
+        - event_id
+        - odds
+        - amount
+      properties:
+        user_id:
+          type: string
+          description: ID of the user placing the bet
+        event_id:
+          type: string
+          description: ID of the event
+        odds:
+          type: number
+          format: float
+          description: Betting odds
+        amount:
+          type: number
+          format: float
+          description: Amount wagered
+
+    SettleBetRequest:
+      type: object
+      required:
+        - event_id
+        - result
+      properties:
+        event_id:
+          type: string
+          description: ID of the event being settled
+        result:
+          type: string
+          enum: [win, lose]
+          description: Result of the event for settlement
+
+    Bet:
+      type: object
+      properties:
+        bet_id:
+          type: string
+          description: Unique identifier for the bet
+        user_id:
+          type: string
+          description: ID of the user who placed the bet
+        event_id:
+          type: string
+          description: ID of the event the bet is on
+        amount:
+          type: number
+          format: float
+          description: Amount wagered
+        odds:
+          type: number
+          format: float
+          description: Betting odds
+        status:
+          type: string
+          description: Status of the bet (e.g., placed, settled)
+        bet_time:
+          type: string
+          format: date-time
+          description: Time when the bet was placed
+        settlement_time:
+          type: string
+          format: date-time
+          description: Time when the bet was settled
+
+    UserBalance:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: ID of the user
+        balance:
+          type: number
+          format: float
+          description: Current balance of the user

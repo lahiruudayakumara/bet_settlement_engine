@@ -1,0 +1,29 @@
+server:
+  port: 8080
+  mode: development
+
+rate_limit:
+  requests_per_minute: 60
+
+log:
+  level: debug
+
+bet:
+  max_amount: 1000
+  min_amount: 10
+  # odds:
+  #   min: 1.5
+  #   max: 10.0
+  # allowed_events:
+  #   - football
+  #   - basketball
+  #   - tennis
+  # allowed_currencies:
+  #   - USD
+  #   - EUR
+  #   - GBP
+  # allowed_bet_types:
+  #   - single
+  #   - multiple
+  # bet_expiry_time: 30 # in minutes
+  # bet_expiry_time_check_interval: 5 # in minutes
